@@ -1,0 +1,30 @@
+{
+  "packName": "Dog Pack",
+  "version": "1.0",
+  "author": "GSN Creations",
+
+  "animations": [
+
+    {
+      "id": 1,
+      "name": "Barking",
+      "bin": "barking.bin",
+      "preview": "/preview/dog/barking.mp4"
+    },
+
+    {
+      "id": 2,
+      "name": "Hi",
+      "bin": "hi.bin",
+      "preview": "/preview/dog/hi.mp4"
+    },
+
+    {
+      "id": 3,
+      "name": "Licking",
+      "bin": "licking.bin",
+      "preview": "/preview/dog/licking.mp4"
+    }
+
+  ]
+}

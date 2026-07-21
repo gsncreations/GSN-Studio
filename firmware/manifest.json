@@ -1,0 +1,10 @@
+{
+  "name": "GSN Studio",
+  "version": "1.0.0",
+  "firmware": "gsn-core.bin",
+  "boards": [
+    "ESP32",
+    "ESP32-C3",
+    "ESP32-S3"
+  ]
+}

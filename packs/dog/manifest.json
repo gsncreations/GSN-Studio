@@ -9,21 +9,21 @@
       "id": 1,
       "name": "Barking",
       "bin": "anim01.bin",
-      "preview": "preview/barking.mp4"
+      "preview": "packs/dog/preview/barking.mp4"
     },
 
     {
       "id": 2,
       "name": "Hi",
       "bin": "anim02.bin",
-      "preview": "preview/hi.mp4"
+      "preview": "packs/dog/preview/hi.mp4"
     },
 
     {
       "id": 3,
       "name": "Licking",
       "bin": "anim03.bin",
-      "preview": "preview/licking.mp4"
+      "preview": "packs/dog/preview/licking.mp4"
     }
 
   ]

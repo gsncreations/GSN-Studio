@@ -188,7 +188,9 @@ while (sent < buffer.length)
 console.log("Finished sending:", sent, "of", buffer.length);
 
 await writer.ready;
-await new Promise(resolve => setTimeout(resolve, 200));
+
+// Wait until Chrome completely flushes USB
+await new Promise(resolve => setTimeout(resolve, 1000));
 
 let result = "";
 

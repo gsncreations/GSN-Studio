@@ -163,111 +163,34 @@
     }
     const buffer = new Uint8Array(await file.arrayBuffer());
 
-    console.log("================================");
-    console.log("File Name   :", file.name);
-    console.log("File Size   :", file.size);
-    console.log("Buffer Size :", buffer.length);
-    console.log("================================");
+console.log("================================");
+console.log("File Name   :", file.name);
+console.log("File Size   :", file.size);
+console.log("Buffer Size :", buffer.length);
+console.log("================================");
 
-  const PACKET_SIZE = 256;
+const CHUNK = 512;
 
 let sent = 0;
 
 while (sent < buffer.length)
 {
-    let line = "";
+    const end = Math.min(sent + CHUNK, buffer.length);
 
-    while (true)
-    {
-        const { value, done } = await reader.read();
+    await writer.write(buffer.slice(sent, end));
+    await writer.ready;
 
-        if (done)
-            return false;
-
-        line += decoder.decode(value);
-
-        if (line.includes("\n"))
-            break;
-    }
-line = line.trim();
-
-const lines = line.split(/\r?\n/);
-
-let nextLine = "";
-
-for (const l of lines)
-{
-    if (l.startsWith("NEXT "))
-    {
-        nextLine = l;
-        break;
-    }
-}
-
-if (nextLine === "")
-{
-    console.log(line);
-    throw new Error("Expected NEXT");
-}
-
-const size = parseInt(nextLine.substring(5));
-
-    const packet = buffer.slice(sent, sent + size);
-
-    console.log("SEND", sent, size);
-
-await writer.write(packet);
-
-console.log("SENT");
-
-await writer.ready;
-
-console.log("READY");
-
-    sent += size;
-    console.log("OFFSET", sent);
+    sent = end;
 
     onProgress(Math.floor((sent * 100) / buffer.length));
-
-    let ack = "";
-
-    while (true)
-    {
-        const { value, done } = await reader.read();
-
-        if (done)
-            return false;
-
-        ack += decoder.decode(value);
-
-        if (ack.includes("\n"))
-            break;
-    }
-
-    ack = ack.trim();
-
-const ackLines = ack.split(/\r?\n/);
-
-let gotAck = false;
-
-for (const l of ackLines)
-{
-    if (l === "ACK")
-    {
-        gotAck = true;
-        break;
-    }
 }
 
-if (!gotAck)
-{
-    console.log(ack);
-    throw new Error("Expected ACK");
-}
+console.log("Finished sending:", sent, "of", buffer.length);
 
-    console.log(`Uploaded ${sent}/${buffer.length}`);
-}
-    let result = "";
+await writer.ready;
+await new Promise(resolve => setTimeout(resolve, 200));
+
+let result = "";
 
     while (true)
     {

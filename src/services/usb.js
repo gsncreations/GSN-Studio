@@ -17,11 +17,10 @@ export async function connectUSB() {
         port = await navigator.serial.requestPort();
 
         await port.open({
-            baudRate:115200
+            baudRate: 115200
         });
 
         writer = port.writable.getWriter();
-
         reader = port.readable.getReader();
 
         console.log("ESP32 Connected");
@@ -29,60 +28,88 @@ export async function connectUSB() {
         return true;
 
     }
+    catch (err) {
 
-   catch (err) {
+        console.error(err);
+        alert(err.message);
 
-    console.error(err);
+        return false;
 
-    alert(err.message);
-
-    return false;
+    }
 
 }
-}
 
-export function getWriter(){
-
+export function getWriter() {
     return writer;
-
 }
 
-export function getReader(){
-
+export function getReader() {
     return reader;
-
 }
 
-export function getPort(){
-
+export function getPort() {
     return port;
-
 }
+
 export async function disconnectUSB() {
 
     try {
 
         if (reader) {
-            await reader.cancel().catch(()=>{});
+            await reader.cancel().catch(() => {});
             reader.releaseLock();
             reader = null;
         }
 
         if (writer) {
-            await writer.close?.().catch(()=>{});
+            await writer.close?.().catch(() => {});
             writer.releaseLock();
             writer = null;
         }
 
         if (port) {
-            await port.close().catch(()=>{});
+            await port.close().catch(() => {});
             port = null;
         }
 
         console.log("USB Disconnected");
 
-    } catch (e) {
+    }
+    catch (e) {
         console.log(e);
+    }
+
+}
+
+export async function sendBytes(data) {
+
+    if (!writer)
+        return false;
+
+    await writer.write(data);
+
+    return true;
+
+}
+
+export async function readLine() {
+
+    const decoder = new TextDecoder();
+
+    let buffer = "";
+
+    while (true) {
+
+        const { value, done } = await reader.read();
+
+        if (done)
+            return "";
+
+        buffer += decoder.decode(value);
+
+        if (buffer.includes("\n"))
+            return buffer.trim();
+
     }
 
 }

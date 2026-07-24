@@ -71,7 +71,7 @@ function Update({ setPage }) {
                     >
 
                         <esp-web-install-button
-                            manifest="/firmware/manifest.json">
+                            manifest={`${import.meta.env.BASE_URL}firmware/manifest.json`}>
                         </esp-web-install-button>
 
                     </div>

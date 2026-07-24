@@ -25,7 +25,7 @@ function Device({ setPage }) {
     useEffect(() => {
 
         refresh();
-        fetch("/packs/dog/manifest.json")
+        fetch(`${import.meta.env.BASE_URL}packs/dog/manifest.json`)
     .then(res => res.json())
     .then(data => setManifest(data));
 

@@ -5,7 +5,7 @@
   "type": "module",
 
   "homepage": "https://sgsnathan78.github.io/GSN-Studio",
-
+  
   "scripts": {
     "dev": "vite",
     "build": "vite build",

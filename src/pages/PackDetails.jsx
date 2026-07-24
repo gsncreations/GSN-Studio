@@ -6,7 +6,7 @@ export default function PackDetails({ setPage }) {
 
   useEffect(() => {
 
-    fetch("/packs/dog/manifest.json")
+    ffetch(`${import.meta.env.BASE_URL}packs/dog/manifest.json`)
       .then(r => r.json())
       .then(setPack);
 
@@ -32,7 +32,7 @@ export default function PackDetails({ setPage }) {
         >
 
           <video
-            src={"/preview/dog/"+anim.preview}
+            src={`${import.meta.env.BASE_URL}packs/dog/${anim.preview}`}
             width="220"
             autoPlay
             loop

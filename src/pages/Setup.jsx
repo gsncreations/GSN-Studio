@@ -90,13 +90,12 @@ function Setup({
 
         ))}
 
-        <button
+       <button
     className="storeBtn"
-    onClick={() => setPage("store")}
+    onClick={saveSettings}
 >
-        
-          💾 Save Changes
-        </button>
+    💾 Save Changes
+</button>
         <button
   className="backBtn"
   onClick={() => setPage("home")}

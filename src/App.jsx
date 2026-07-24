@@ -15,9 +15,7 @@ import { connectUSB } from "./services/usb";
 
 function App() {
 
-  const [installed, setInstalled] = useState(
-    localStorage.getItem("installed") === "true"
-  );
+ const [installed, setInstalled] = useState(true);
 
   const [connected, setConnected] = useState(false);
 

@@ -138,7 +138,7 @@
     
 
     // Tell ESP32 we're starting an upload
-    await writer.write(
+   await newWriter.write(
         encoder.encode(`UPLOAD ${file.name} ${file.size}\n`)
     );
         // Wait for READY
@@ -178,7 +178,7 @@ while (sent < buffer.length)
     const end = Math.min(sent + CHUNK, buffer.length);
 
     await writer.write(buffer.slice(sent, end));
-    await writer.ready;
+    await newWriter.ready
 
     sent = end;
 
@@ -189,11 +189,19 @@ console.log("Finished sending:", sent, "of", buffer.length);
 
 await writer.ready;
 
-// Wait until Chrome completely flushes USB
+// Force the browser to finish the last USB transfer
 await new Promise(resolve => setTimeout(resolve, 1000));
 
-let result = "";
+console.log("Finished sending:", sent, "of", buffer.length);
 
+const writerLock = writer;
+writerLock.releaseLock();
+
+await new Promise(resolve => setTimeout(resolve, 100));
+
+const newWriter = getWriter();
+
+let result = "";
     while (true)
     {
         const { value, done } = await reader.read();

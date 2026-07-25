@@ -169,7 +169,7 @@ console.log("File Size   :", file.size);
 console.log("Buffer Size :", buffer.length);
 console.log("================================");
 
-const CHUNK = 128;
+const CHUNK = 512;
 
 let sent = 0;
 

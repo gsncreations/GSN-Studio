@@ -122,105 +122,71 @@
         }
     }
     export async function uploadAnimation(file, onProgress = () => {})
+{
+    const writer = getWriter();
+
+    if (!writer)
     {
-        const writer = getWriter();
-        const reader = getReader();
-// Clear any pending serial data
-while (true)
-{
-    const result = await Promise.race([
-        reader.read(),
-        new Promise(resolve => setTimeout(() => resolve(null), 20))
-    ]);
-
-    if (result === null)
-        break;
-
-    if (result.done)
-        break;
-}
-        if (!writer || !reader)
-        {
-            alert("ESP32 not connected.");
-            return false;
-        }
-
-        const encoder = new TextEncoder();
-        const decoder = new TextDecoder();
-
-    
-
-    // Tell ESP32 we're starting an upload
-   await writer.write(
-    encoder.encode(`UPLOAD ${file.name} ${file.size}\n`)
-);
-   while (true)
-{
-    const line = await readLine();
-
-    console.log(line);
-
-    if (line === "READY")
-        break;
-
-    if (line === "UPLOAD_FAILED")
+        alert("ESP32 not connected.");
         return false;
-}
+    }
+
+    const encoder = new TextEncoder();
+
+    // Send upload command
+    await writer.write(
+        encoder.encode(`UPLOAD ${file.name} ${file.size}\n`)
+    );
+
+    // Wait for READY
+    while (true)
+    {
+        const line = await readLine();
+
+        console.log("ESP:", line);
+
+        if (line === "READY")
+            break;
+
+        if (line === "UPLOAD_FAILED")
+            return false;
+    }
+
     const buffer = new Uint8Array(await file.arrayBuffer());
 
-console.log("================================");
-console.log("File Name   :", file.name);
-console.log("File Size   :", file.size);
-console.log("Buffer Size :", buffer.length);
-console.log("================================");
+    const CHUNK = 512;
 
-const CHUNK = 512;
+    let sent = 0;
 
-let sent = 0;
+    while (sent < buffer.length)
+    {
+        const end = Math.min(sent + CHUNK, buffer.length);
 
-while (sent < buffer.length)
-{
-    const end = Math.min(sent + CHUNK, buffer.length);
+        await writer.write(buffer.slice(sent, end));
 
-    await writer.write(buffer.slice(sent, end));
+        await writer.ready;
+
+        sent = end;
+
+        onProgress(
+            Math.floor((sent * 100) / buffer.length)
+        );
+    }
+
+    console.log("Upload Finished");
+
     await writer.ready;
 
-    sent = end;
-
-    onProgress(Math.floor((sent * 100) / buffer.length));
-}
-
-console.log("Finished sending:", sent, "of", buffer.length);
-
-await writer.ready;
-
-// Wait for the USB driver to finish transmitting
-await new Promise(resolve => setTimeout(resolve, 2000));
-
-console.log("Finished sending:", sent, "of", buffer.length);
-
-
-
-while (true)
-{
-    const line = await readLine();
-
-    console.log(line);
-
-    if (line === "UPLOAD_OK")
+    while (true)
     {
-        await new Promise(resolve => setTimeout(resolve, 500));
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        return true;
-    }
+        const line = await readLine();
 
-    if (line === "UPLOAD_FAILED")
-        return false;
-}
+        console.log("ESP:", line);
 
-if (result.includes("UPLOAD_FAILED"))
-{
-    return false;
-}
+        if (line === "UPLOAD_OK")
+            return true;
+
+        if (line === "UPLOAD_FAILED")
+            return false;
     }
-    
+}

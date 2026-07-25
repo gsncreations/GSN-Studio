@@ -138,9 +138,9 @@
     
 
     // Tell ESP32 we're starting an upload
-   await newWriter.write(
-        encoder.encode(`UPLOAD ${file.name} ${file.size}\n`)
-    );
+   await writer.write(
+    encoder.encode(`UPLOAD ${file.name} ${file.size}\n`)
+);
         // Wait for READY
     let rx = "";
 
@@ -169,7 +169,7 @@ console.log("File Size   :", file.size);
 console.log("Buffer Size :", buffer.length);
 console.log("================================");
 
-const CHUNK = 512;
+const CHUNK = 128;
 
 let sent = 0;
 
@@ -178,7 +178,7 @@ while (sent < buffer.length)
     const end = Math.min(sent + CHUNK, buffer.length);
 
     await writer.write(buffer.slice(sent, end));
-    await newWriter.ready
+    await writer.ready;
 
     sent = end;
 
@@ -189,17 +189,12 @@ console.log("Finished sending:", sent, "of", buffer.length);
 
 await writer.ready;
 
-// Force the browser to finish the last USB transfer
-await new Promise(resolve => setTimeout(resolve, 1000));
+// Wait for the USB driver to finish transmitting
+await new Promise(resolve => setTimeout(resolve, 2000));
 
 console.log("Finished sending:", sent, "of", buffer.length);
 
-const writerLock = writer;
-writerLock.releaseLock();
 
-await new Promise(resolve => setTimeout(resolve, 100));
-
-const newWriter = getWriter();
 
 let result = "";
     while (true)

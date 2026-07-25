@@ -1,6 +1,7 @@
 let port = null;
 let writer = null;
 let reader = null;
+let rxBuffer = "";
 
 export async function connectUSB() {
 
@@ -59,6 +60,7 @@ export async function disconnectUSB() {
             await reader.cancel().catch(() => {});
             reader.releaseLock();
             reader = null;
+            rxBuffer = "";
         }
 
         if (writer) {
@@ -92,24 +94,26 @@ export async function sendBytes(data) {
 
 }
 
-export async function readLine() {
-
+export async function readLine()
+{
     const decoder = new TextDecoder();
 
-    let buffer = "";
+    while (true)
+    {
+        const index = rxBuffer.indexOf("\n");
 
-    while (true) {
+        if (index !== -1)
+        {
+            const line = rxBuffer.substring(0, index).trim();
+            rxBuffer = rxBuffer.substring(index + 1);
+            return line;
+        }
 
         const { value, done } = await reader.read();
 
         if (done)
             return "";
 
-        buffer += decoder.decode(value);
-
-        if (buffer.includes("\n"))
-            return buffer.trim();
-
+        rxBuffer += decoder.decode(value);
     }
-
 }

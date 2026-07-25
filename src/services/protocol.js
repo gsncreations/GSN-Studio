@@ -1,4 +1,4 @@
-    import { getWriter, getReader } from "./usb";
+    import { getWriter, getReader, readLine } from "./usb";
 
     // ----------------------------------------------------
     // Save settings
@@ -125,7 +125,20 @@
     {
         const writer = getWriter();
         const reader = getReader();
+// Clear any pending serial data
+while (true)
+{
+    const result = await Promise.race([
+        reader.read(),
+        new Promise(resolve => setTimeout(() => resolve(null), 20))
+    ]);
 
+    if (result === null)
+        break;
+
+    if (result.done)
+        break;
+}
         if (!writer || !reader)
         {
             alert("ESP32 not connected.");
@@ -141,26 +154,18 @@
    await writer.write(
     encoder.encode(`UPLOAD ${file.name} ${file.size}\n`)
 );
-        // Wait for READY
-    let rx = "";
+   while (true)
+{
+    const line = await readLine();
 
-    while (true)
-    {
-        const { value, done } = await reader.read();
+    console.log(line);
 
-        if (done)
-            return false;
+    if (line === "READY")
+        break;
 
-        rx += decoder.decode(value);
-
-        console.log(rx);
-
-        if (rx.includes("READY"))
-            break;
-
-        if (rx.includes("UPLOAD_FAILED"))
-            return false;
-    }
+    if (line === "UPLOAD_FAILED")
+        return false;
+}
     const buffer = new Uint8Array(await file.arrayBuffer());
 
 console.log("================================");
@@ -196,23 +201,21 @@ console.log("Finished sending:", sent, "of", buffer.length);
 
 
 
-let result = "";
-    while (true)
-    {
-        const { value, done } = await reader.read();
-
-        if (done)
-            return false;
-
-        result += decoder.decode(value);
-
-        console.log(result);
-
-       if (result.includes("UPLOAD_OK"))
+while (true)
 {
-    // Wait before allowing the next upload
-    await new Promise(resolve => setTimeout(resolve, 500));
-    return true;
+    const line = await readLine();
+
+    console.log(line);
+
+    if (line === "UPLOAD_OK")
+    {
+        await new Promise(resolve => setTimeout(resolve, 500));
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        return true;
+    }
+
+    if (line === "UPLOAD_FAILED")
+        return false;
 }
 
 if (result.includes("UPLOAD_FAILED"))
@@ -220,4 +223,4 @@ if (result.includes("UPLOAD_FAILED"))
     return false;
 }
     }
-    }
+    

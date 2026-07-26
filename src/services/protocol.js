@@ -137,28 +137,24 @@
     await writer.write(
         encoder.encode(`UPLOAD ${file.name} ${file.size}\n`)
     );
-
+await writer.ready;
     // Wait for READY
-    while (true)
-    {
-        const line = await readLine();
-
-        console.log("ESP:", line);
-
-        if (line === "READY")
+   while (true)
 {
-    // Give the ESP32 time to enter receiveAnimationFile()
-    await new Promise(resolve => setTimeout(resolve, 20));
-    break;
-}   
+    const line = await readLine();
 
-        if (line === "UPLOAD_FAILED")
-            return false;
-    }
+    console.log("ESP:", line);
+
+    if (line === "READY")
+        break;
+
+    if (line === "UPLOAD_FAILED")
+        return false;
+}
 
     const buffer = new Uint8Array(await file.arrayBuffer());
 
-   const CHUNK = 256;
+   const CHUNK = 1024;
 
     let sent = 0;
 
@@ -167,8 +163,6 @@
         const end = Math.min(sent + CHUNK, buffer.length);
 
         await writer.write(buffer.slice(sent, end));
-
-        await writer.ready;
 
         sent = end;
 
@@ -179,11 +173,9 @@
 
     console.log("Upload Finished");
 
-    await writer.ready;
+   await writer.write(new Uint8Array(0));
 
-// Give Chrome time to flush the final USB packet
-await new Promise(resolve => setTimeout(resolve, 100));
-
+await new Promise(resolve => setTimeout(resolve, 200));
 while (true)
 {
     const line = await readLine();

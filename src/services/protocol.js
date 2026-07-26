@@ -146,7 +146,11 @@
         console.log("ESP:", line);
 
         if (line === "READY")
-            break;
+{
+    // Give the ESP32 time to enter receiveAnimationFile()
+    await new Promise(resolve => setTimeout(resolve, 20));
+    break;
+}   
 
         if (line === "UPLOAD_FAILED")
             return false;

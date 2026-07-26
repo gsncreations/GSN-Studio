@@ -154,7 +154,7 @@ await writer.ready;
 
     const buffer = new Uint8Array(await file.arrayBuffer());
 
-   const CHUNK = 1024;
+   const CHUNK = 512;
 
     let sent = 0;
 
@@ -163,6 +163,8 @@ await writer.ready;
         const end = Math.min(sent + CHUNK, buffer.length);
 
         await writer.write(buffer.slice(sent, end));
+
+await writer.ready;
 
         sent = end;
 
@@ -173,9 +175,9 @@ await writer.ready;
 
     console.log("Upload Finished");
 
-   await writer.write(new Uint8Array(0));
+  await writer.ready;
 
-await new Promise(resolve => setTimeout(resolve, 200));
+await new Promise(resolve => setTimeout(resolve, 100));
 while (true)
 {
     const line = await readLine();

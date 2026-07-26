@@ -5,12 +5,12 @@
 
   "animations": [
 
-   {
-  "id": 1,
-  "title": "Barking",
-  "file": "anim01.bin",
-  "preview": "packs/dog/preview/barking.mp4"
-},
+    {
+      "id": 1,
+      "name": "Barking",
+      "bin": "anim01.bin",
+      "preview": "packs/dog/preview/barking.mp4"
+    },
 
     {
       "id": 2,

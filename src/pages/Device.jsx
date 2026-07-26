@@ -30,6 +30,13 @@ function Device({ setPage }) {
     .then(data => setManifest(data));
 
     }, []);
+    function getAnimationName(fileName) {
+    if (!manifest?.animations) return fileName;
+
+    const anim = manifest.animations.find(a => a.file === fileName);
+
+    return anim ? anim.title : fileName.replace(".bin", "");
+}
 
     return (
 
@@ -101,7 +108,7 @@ function Device({ setPage }) {
         className="fileCard"
     >
 
-        🎬 {name.replace(".bin", "").replace(/^anim\d+/i, "Animation")}
+        🎬 {getAnimationName(name)}
 
     </div>
 

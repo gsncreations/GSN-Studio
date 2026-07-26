@@ -1,7 +1,7 @@
 import events from "../data/events";
 import AssignmentCard from "../components/AssignmentCard";
 import { buildSettings } from "../services/settings";
-import { sendJSON } from "../services/protocol";
+import { sendJSON, getDeviceInfo } from "../services/protocol";
 
 function Setup({
   assignments,
@@ -10,6 +10,16 @@ function Setup({
 }) {
 
   async function saveSettings() {
+    const [deviceInfo, setDeviceInfo] = useState(null);
+
+async function refreshDeviceInfo() {
+  try {
+    const info = await getDeviceInfo();
+    setDeviceInfo(info);
+  } catch (e) {
+    alert("Unable to read device information.");
+  }
+}
 
     const settings = buildSettings(assignments);
 
@@ -94,6 +104,39 @@ function Setup({
     className="storeBtn"
     onClick={saveSettings}
 >
+  <div
+  style={{
+    marginTop: 20,
+    padding: 16,
+    borderRadius: 12,
+    background: "#1f2937",
+    color: "white",
+  }}
+>
+  <h3>Device Information</h3>
+
+  {deviceInfo ? (
+    <>
+      <p>Firmware: {deviceInfo.firmware}</p>
+      <p>Chip: {deviceInfo.chip}</p>
+      <p>Animations: {deviceInfo.animations}</p>
+      <p>
+        LittleFS:{" "}
+        {(deviceInfo.littlefs_used / 1024).toFixed(1)} KB /{" "}
+        {(deviceInfo.littlefs_total / 1024).toFixed(1)} KB
+      </p>
+    </>
+  ) : (
+    <p>No information loaded.</p>
+  )}
+
+  <button
+    className="storeBtn"
+    onClick={refreshDeviceInfo}
+  >
+    🔄 Refresh Device Info
+  </button>
+</div>
     💾 Save Changes
 </button>
         <button

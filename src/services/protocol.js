@@ -191,3 +191,11 @@ while (true)
             return false;
     }
 }
+
+export async function getDeviceInfo() {
+  await sendCommand("DEVICE_INFO");
+
+  const line = await readLine();
+
+  return JSON.parse(line);
+}

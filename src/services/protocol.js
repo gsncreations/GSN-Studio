@@ -158,7 +158,7 @@
 
     const buffer = new Uint8Array(await file.arrayBuffer());
 
-    const CHUNK = 512;
+   const CHUNK = 256;
 
     let sent = 0;
 
@@ -181,9 +181,12 @@
 
     await writer.ready;
 
-    while (true)
-    {
-        const line = await readLine();
+// Give Chrome time to flush the final USB packet
+await new Promise(resolve => setTimeout(resolve, 100));
+
+while (true)
+{
+    const line = await readLine();
 
         console.log("ESP:", line);
 

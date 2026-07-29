@@ -3,28 +3,24 @@
   "version": "1.0",
   "author": "GSN Creations",
 
-  "animations": [
-
-    {
-      "id": 1,
-      "name": "Barking",
-      "bin": "anim01.bin",
-      "preview": "packs/dog/preview/barking.mp4"
-    },
-
-    {
-      "id": 2,
-      "name": "Hi",
-      "bin": "anim02.bin",
-      "preview": "packs/dog/preview/hi.mp4"
-    },
-
-    {
-      "id": 3,
-      "name": "Licking",
-      "bin": "anim03.bin",
-      "preview": "packs/dog/preview/licking.mp4"
-    }
-
-  ]
+"animations": [
+  {
+    "id": 1,
+    "name": "Licking",
+    "bin": "anim01.bin",
+    "preview": "packs/dog/preview/licking.mp4"
+  },
+  {
+    "id": 2,
+    "name": "Barking",
+    "bin": "anim02.bin",
+    "preview": "packs/dog/preview/barking.mp4"
+  },
+  {
+    "id": 3,
+    "name": "Hi",
+    "bin": "anim03.bin",
+    "preview": "packs/dog/preview/hi.mp4"
+  }
+]
 }

@@ -20,31 +20,28 @@ function App() {
     <div className="card">
 
       <div className="logo">
-        🎨
+        🐶
       </div>
 
       <h1>GSN Studio</h1>
 
       <p className="subtitle">
-        Professional OLED Animation Studio
+        Bring your OLED pet to life.
       </p>
 
       <div className="heroBox">
 
-        <div className="heroRow">
-          <span>Firmware</span>
-          <b>V1.0</b>
-        </div>
+        <h3>Your Device</h3>
 
-        <div className="heroRow">
-          <span>Device</span>
-          <b>ESP32 OLED</b>
-        </div>
+        <p style={{ fontSize: "18px", margin: "15px 0" }}>
+          {connected ? "🟢 Connected" : "🔴 Not Connected"}
+        </p>
 
-        <div className="heroRow">
-          <span>Connection</span>
-          <b>USB Serial</b>
-        </div>
+        <p>
+          {connected
+            ? "Your pet is ready!"
+            : "Connect your device to begin."}
+        </p>
 
       </div>
 
@@ -52,34 +49,28 @@ function App() {
         className="connectBtn"
         onClick={connect}
       >
-        {connected ? "🟢 Device Connected" : "Connect ESP32"}
+        {connected ? "✅ Device Connected" : "🔌 Connect Device"}
       </button>
 
       <div className="features">
 
-        <div>✅ No Arduino IDE Required</div>
+        <div>✨ No Software Installation</div>
 
-        <div>✅ Browser Based</div>
+        <div>✨ Easy Animation Setup</div>
 
-        <div>✅ Animation Manager</div>
+        <div>✨ One Click Upload</div>
 
       </div>
 
       <div className="footer">
-
         Made with ❤️ by GSN Creations
-
       </div>
 
     </div>
   </div>
 );
 
-<p className="footer">
-    GSN Studio V1.0.0
-    <br />
-    © 2026 GSN Creations
-</p>
+
 }
 
 export default App;

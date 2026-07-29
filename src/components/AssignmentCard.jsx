@@ -1,4 +1,13 @@
+
+import animations from "../data/animations";
+
 function AssignmentCard({ event, animation, onSelect }) {
+  
+
+const selectedAnimation = animations.find(
+  (item) => Number(item.id) === Number(animation)
+);
+
 
   return (
 
@@ -10,18 +19,54 @@ function AssignmentCard({ event, animation, onSelect }) {
 
         {animation ? (
 
-          <div className="selected-animation">
+          <div
+  className="selected-animation"
+  style={{
+    display: "flex",
+    alignItems: "center",
+    gap: "12px",
+    marginTop: "10px"
+  }}
+>
 
-            <span
-              style={{
-                fontSize: "18px",
-                fontWeight: "bold"
-              }}
-            >
-              {animation}
-            </span>
+  {selectedAnimation && (
+    <video
+      src={selectedAnimation.preview}
+      autoPlay
+      muted
+      loop
+      playsInline
+      style={{
+        width: "70px",
+        height: "70px",
+        objectFit: "cover",
+        borderRadius: "10px",
+        border: "2px solid #3b82f6"
+      }}
+    />
+  )}
 
-          </div>
+  <div>
+    <div
+      style={{
+        fontSize: "18px",
+        fontWeight: "bold"
+      }}
+    >
+      🐶 {selectedAnimation?.title}
+    </div>
+
+    <div
+      style={{
+        color: "#888",
+        fontSize: "14px"
+      }}
+    >
+      Ready to use
+    </div>
+  </div>
+
+</div>
 
         ) : (
 

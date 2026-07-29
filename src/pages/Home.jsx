@@ -76,11 +76,11 @@ function Home({ setPage }) {
                     </button>
 
                     <button
-                        className="connectBtn"
-                        onClick={() => setPage("about")}
-                    >
-                        ℹ️ About
-                    </button>
+    className="connectBtn"
+    onClick={() => setPage("settings")}
+>
+    ⚙️ Settings
+</button>
 
                 </div>
 

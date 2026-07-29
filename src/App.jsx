@@ -7,8 +7,9 @@ import Upload from "./pages/Upload";
 import Home from "./pages/Home";
 import Device from "./pages/Device";
 import Update from "./pages/Update";
-import About from "./pages/About";
+  
 import Installer from "./components/Installer";
+import Settings from "./pages/Settings";  
 
 import Toast from "./components/Toast";
 import { connectUSB } from "./services/usb";
@@ -116,14 +117,14 @@ return (
       <Device setPage={setPage} />
     )}
 
-    {page === "setup" && (
-      <Setup
-        assignments={assignments}
-        setCurrentEvent={setCurrentEvent}
-        setPage={setPage}
-      />
-    )}
-
+  {page === "setup" && (
+  <Setup
+    assignments={assignments}
+    setCurrentEvent={setCurrentEvent}
+    setPage={setPage}
+    showToast={showToast}
+  />
+)}
     {page === "gallery" && (
       <Gallery
         currentEvent={currentEvent}
@@ -133,11 +134,12 @@ return (
       />
     )}
 
-    {page === "store" && (
-      <Store
-        setPage={setPage}
-      />
-    )}
+   {page === "store" && (
+  <Store
+    setPage={setPage}
+    showToast={showToast}
+  />
+)}
 
     {page === "update" && (
       <Update
@@ -145,11 +147,12 @@ return (
       />
     )}
 
-    {page === "about" && (
-      <About
-        setPage={setPage}
-      />
-    )}
+    
+    {page === "settings" && (
+  <Settings
+    setPage={setPage}
+  />
+)}
 
     {page === "upload" && (
       <Upload

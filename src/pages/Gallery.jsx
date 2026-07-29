@@ -20,9 +20,8 @@ function Gallery({
     load();
   }, []);
 
-  function selectAnimation(name) {
-    const id =
-      manifest.animations.findIndex((a) => a.bin === name) + 1;
+  function selectAnimation(animation) {
+    const id = animation.id;
 
     setAssignments({
       ...assignments,
@@ -35,22 +34,26 @@ function Gallery({
   return (
     <div className="app">
       <div className="card">
-        <h1>🎬 Animation Gallery</h1>
+        <h1>Choose an Animation</h1>
 
-        <p className="subtitle">
-          Select an animation for this event.
-        </p>
-
+<p className="subtitle">
+Pick your pet's animation.
+</p>
         <div className="galleryGrid">
           {manifest?.animations.map((anim) => (
             <div className="galleryCard" key={anim.id}>
-              <video
-                src={`${import.meta.env.BASE_URL}${anim.preview}`}
-                autoPlay
-                muted
-                loop
-                playsInline
-              />
+             <video
+  src={`${import.meta.env.BASE_URL}${anim.preview}`}
+  autoPlay
+  muted
+  loop
+  playsInline
+  style={{
+    width: "100%",
+    borderRadius: "12px",
+    marginBottom: "12px"
+  }}
+/>
 
               <h3>{anim.name}</h3>
 
@@ -58,9 +61,9 @@ function Gallery({
 
               <button
                 className="selectBtn"
-                onClick={() => selectAnimation(anim.bin)}
+                onClick={() => selectAnimation(anim)}
               >
-                ✓ Select Animation
+                ✨ Use Animation
               </button>
             </div>
           ))}

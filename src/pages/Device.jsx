@@ -30,6 +30,8 @@ function Device({ setPage }) {
     .then(data => setManifest(data));
 
     }, []);
+
+    console.log("Manifest:", manifest);  
     function getAnimationName(fileName) {
     if (!manifest?.animations) return fileName;
 

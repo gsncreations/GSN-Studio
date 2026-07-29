@@ -139,14 +139,24 @@
     );
 await writer.ready;
     // Wait for READY
-   while (true)
+ let ready = false;
+
+while (true)
 {
     const line = await readLine();
 
     console.log("ESP:", line);
 
     if (line === "READY")
+    {
+        ready = true;
+        continue;
+    }
+
+    if (ready && line === "PACKET")
+    {
         break;
+    }
 
     if (line === "UPLOAD_FAILED")
         return false;
@@ -162,9 +172,11 @@ await writer.ready;
     {
         const end = Math.min(sent + CHUNK, buffer.length);
 
-        await writer.write(buffer.slice(sent, end));
-
+       await writer.write(buffer.slice(sent, end));
 await writer.ready;
+
+// Tiny pause
+await new Promise(resolve => setTimeout(resolve, 2));
 
         sent = end;
 
@@ -193,9 +205,45 @@ while (true)
 }
 
 export async function getDeviceInfo() {
-  await sendCommand("DEVICE_INFO");
 
-  const line = await readLine();
+    const writer = getWriter();
+    const reader = getReader();
 
-  return JSON.parse(line);
+    if (!writer || !reader)
+        return null;
+
+    const encoder = new TextEncoder();
+    const decoder = new TextDecoder();
+
+    await writer.write(
+        encoder.encode("DEVICE_INFO\n")
+    );
+
+    let buffer = "";
+
+    while (true)
+    {
+        const { value, done } = await reader.read();
+
+        if (done)
+            return null;
+
+        buffer += decoder.decode(value);
+
+        const start = buffer.indexOf("{");
+        const end = buffer.lastIndexOf("}");
+
+        if (start !== -1 && end !== -1)
+        {
+            try
+            {
+                return JSON.parse(
+                    buffer.substring(start, end + 1)
+                );
+            }
+            catch (e)
+            {
+            }
+        }
+    }
 }
